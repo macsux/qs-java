@@ -1,13 +1,10 @@
 package com.docusign.controller;
 
-import com.docusign.controller.examples.EGController;
 import com.docusign.esign.api.EnvelopesApi;
 import com.docusign.esign.client.ApiClient;
 import com.docusign.esign.client.ApiException;
 import com.docusign.esign.model.*;
-import com.docusign.model.Session;
 import com.sun.jersey.core.util.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,10 +30,6 @@ import java.util.Arrays;
 
 @Controller
 public class QS01EmbedSigningCeremonyController {
-
-    @Autowired
-    Session session;
-
 
     @RequestMapping(path = "/qs01", method = RequestMethod.POST)
     public Object create(ModelMap model) throws ApiException, IOException {
@@ -159,7 +152,7 @@ public class QS01EmbedSigningCeremonyController {
 
     // Read a file
     private byte[] readFile(String path) throws IOException {
-        InputStream is = EGController.class.getResourceAsStream("/" + path);
+        InputStream is = QS01EmbedSigningCeremonyController.class.getResourceAsStream("/" + path);
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;
         byte[] data = new byte[1024];

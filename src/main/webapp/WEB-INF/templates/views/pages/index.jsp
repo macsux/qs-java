@@ -9,7 +9,7 @@
   to obtain a token.</p>
   <p><b>Configure</b> the examples by editing their source. See the three QS* controllers in the
     controller directory.</p>
-  
+
   <h4 id="example001">1. <a href="qs01">Embedded Signing Ceremony</a></h4>
   <p>This quickstart example sends an envelope, and then uses an embedded signing ceremony for the signer.
     With embedded signing, the DocuSign signing ceremony is initiated from your website.

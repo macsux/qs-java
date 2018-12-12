@@ -5,9 +5,7 @@ import com.docusign.esign.client.ApiClient;
 import com.docusign.esign.client.ApiException;
 import com.docusign.esign.model.*;
 import com.docusign.esign.api.EnvelopesApi.ListStatusChangesOptions;
-import com.docusign.model.Session;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,10 +27,6 @@ import java.io.IOException;
 
 @Controller
 public class QS03ListEnvelopesController {
-
-    @Autowired
-    Session session;
-
 
     @RequestMapping(path = "/qs03", method = RequestMethod.POST)
     public Object create(ModelMap model) throws ApiException, IOException {
