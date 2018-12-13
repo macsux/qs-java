@@ -10,11 +10,11 @@ trying the DocuSign eSignature API with the
 The repo includes:
 
 1. Embedding a signing ceremony in your web application.
-[Source.](https://github.com/docusign/qs-csharp/blob/master/qs-csharp/Pages/EmbeddedSigning.cshtml.cs) 
+[Source.](https://github.com/docusign/qs-java/blob/master/src/main/java/com/docusign/controller/QS01EmbedSigningCeremonyController.java) 
 2.  Sending a signing request via an email to the signer.
-[Source.]()
+[Source.](https://github.com/docusign/qs-java/blob/master/src/main/java/com/docusign/controller/QS02SendEnvelopeController.java)
 3. Listing updated envelopes in the user's account, including their status.
-[Source.]()
+[Source.](https://github.com/docusign/qs-java/blob/master/src/main/java/com/docusign/controller/QS03ListEnvelopesController.java)
 
 These examples do not include authentication. Instead,
 use the DocuSign DevCenter's
@@ -47,9 +47,9 @@ The example code and SDK can be used with Java 1.7 or later.
 Each quick start example is a self-contained file. You need to
 configure each:
 
-* [QS01EmbedSigningCeremonyController.java]()
-* [QS02SendEnvelopeController.java]()
-* [QS03ListEnvelopesController.java]()
+* [QS01EmbedSigningCeremonyController.java](https://github.com/docusign/qs-java/blob/master/src/main/java/com/docusign/controller/QS01EmbedSigningCeremonyController.java)
+* [QS02SendEnvelopeController.java](https://github.com/docusign/qs-java/blob/master/src/main/java/com/docusign/controller/QS02SendEnvelopeController.java)
+* [QS03ListEnvelopesController.java](https://github.com/docusign/qs-java/blob/master/src/main/java/com/docusign/controller/QS03ListEnvelopesController.java)
 
 You will configure them with the following data:
 
@@ -64,7 +64,7 @@ You will configure them with the following data:
  * **Account Id:** After logging into the [DocuSign Sandbox system](https://demo.docusign.net),
    you can copy your Account Id from the dropdown menu by your name. See the figure:
 
-   ![Figure](https://raw.githubusercontent.com/docusign/qs-csharp/master/documentation/account_id.png)
+   ![Figure](https://raw.githubusercontent.com/docusign/qs-java/master/documentation/account_id.png)
  * **Signer name and email:** Remember to try the DocuSign signing ceremony using both a mobile phone and a regular
    email client.
 
