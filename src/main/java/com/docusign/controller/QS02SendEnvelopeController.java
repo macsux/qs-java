@@ -44,18 +44,6 @@ public class QS02SendEnvelopeController {
         String signerName = "{USER_FULLNAME}";
         String signerEmail = "{USER_EMAIL}";
 
-
-        /////////////////////
-        accessToken = "eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQkAAAABAAUABwCA8wFiAmDWSAgAgDMlcEVg1kgCAFCYSRTxQ4RBlE9V5f7RiHAVAAEAAAAYAAEAAAAFAAAADQAkAAAAZjBmMjdmMGUtODU3ZC00YTcxLWE0ZGEtMzJjZWNhZTNhOTc4EgACAAAABwAAAG1hbmFnZWQLAAAAZHNfaW50ZXJuYWwwAADA_yYCYNZI.zKcewRlJJGkkimeaiPUMIhsFxzN3DSdJO2Lk1H1GS4JILknNj8vyBEadiM8qvhqV3buO3lZKjJN0pl9dIGtT5hP6wqtK2VBYgBXW1FGVfC4a21oPyABZu6h4UrggXpkuWE6Tv11tG7TiZbRb_CPyeQlG4d8AdXVKW6jcWF9gILqUzgNTivcI31_LKqIceKoB_IKdyhalPR_oDCvl4QOZSBrIHvsW5amgiuZNKwGLRQUa7XaJ9TrYclSBrspA-91wzFlGnOvjFu3fYDQk279ZaPyAVTSsCFUWH25dAmIydBlmKdTjJlgEn8Fk_U0DR7OHgjH8sg-qcMIo9jSQ9M_OKQ";
-        accountId = "3964103";
-        signerName = "Larry Kluger";
-        signerEmail = "larry.kluger@docusign.com";
-        /////////////////////
-        /////////////////////
-        /////////////////////
-
-
-
         // The url for this web application
         String baseUrl = "http://localhost:8080";
         //
