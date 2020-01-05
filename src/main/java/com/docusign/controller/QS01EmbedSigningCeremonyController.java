@@ -5,6 +5,8 @@ import com.docusign.esign.client.ApiClient;
 import com.docusign.esign.client.ApiException;
 import com.docusign.esign.model.*;
 import com.sun.jersey.core.util.Base64;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,21 +33,23 @@ import java.util.Arrays;
 @Controller
 public class QS01EmbedSigningCeremonyController {
 
-    @RequestMapping(path = "/qs01", method = RequestMethod.POST)
-    public Object create(ModelMap model) throws ApiException, IOException {
+    @RequestMapping(path = "/qs01", method = RequestMethod.GET)
+
+    public Object create(@RegisteredOAuth2AuthorizedClient("docusign-client") OAuth2AuthorizedClient docusignAuthClient, ModelMap model) throws ApiException, IOException {
         model.addAttribute("title","Embedded Signing Ceremony");
 
         // Data for this example
         // Fill in these constants
         //
         // Obtain an OAuth access token from https://developers.docusign.com/oauth-token-generator
-        String accessToken = "{ACCESS_TOKEN}";
+        String accessToken = docusignAuthClient.getAccessToken().getTokenValue();
+//        String accessToken = "";
         // Obtain your accountId from demo.docusign.com -- the account id is shown in the drop down on the
         // upper right corner of the screen by your picture or the default picture.
-        String accountId = "{ACCOUNT_ID}";
+        String accountId = "9654515";
         // Recipient Information
-        String signerName = "{USER_FULLNAME}";
-        String signerEmail = "{USER_EMAIL}";
+        String signerName = "Andrew";
+        String signerEmail = "myemail@pivotal.io";
 
         // The url for this web application
         String baseUrl = "http://localhost:8080";
@@ -152,10 +156,4 @@ public class QS01EmbedSigningCeremonyController {
     }
 
 
-    // Handle get request to show the form
-    @RequestMapping(path = "/qs01", method = RequestMethod.GET)
-    public String get(ModelMap model) {
-        model.addAttribute("title","Embedded Signing Ceremony");
-        return "pages/qs01";
-    }
 }

@@ -1,7 +1,6 @@
 package com.docusign;
 
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.boot.context.embedded.ServletContextInitializer;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -16,16 +15,16 @@ import java.util.Set;
 
 @EnableWebMvc
 @Configuration
-public class AppConfig extends WebMvcConfigurerAdapter {
+public class AppConfig implements WebMvcConfigurer {
 
-    @Bean
-    public ServletContextInitializer servletContextInitializer() {
-        return servletContext -> {
-            Set<SessionTrackingMode> set = new HashSet<>();
-            set.add(SessionTrackingMode.COOKIE);
-            servletContext.setSessionTrackingModes(set);
-        };
-    }
+//    @Bean
+//    public ServletContextInitializer servletContextInitializer() {
+//        return servletContext -> {
+//            Set<SessionTrackingMode> set = new HashSet<>();
+//            set.add(SessionTrackingMode.COOKIE);
+//            servletContext.setSessionTrackingModes(set);
+//        };
+//    }
 
     @Bean
     public RequestContextListener requestContextListener() {

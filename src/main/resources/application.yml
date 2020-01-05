@@ -1,0 +1,22 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          local-client:
+            provider: identityserver4
+            client-id: gui
+            client-secret: password
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid
+          docusign-client:
+            provider: docusign-sandbox
+            client-id: 469774cd-29e0-44b6-8897-7245d88386ea
+            client-secret: be7e62b7-607a-4ce8-8957-d2367b1e0206
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: signature
+        provider:
+          identityserver4:
+            issuer-uri: http://localhost:5000
+          docusign-sandbox:
+            issuer-uri: https://account-d.docusign.com/
