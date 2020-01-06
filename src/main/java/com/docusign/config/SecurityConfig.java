@@ -18,7 +18,10 @@ package com.docusign.config;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
+import org.springframework.security.oauth2.server.resource.web.server.ServerBearerTokenAuthenticationConverter;
 
 /**
  * @author Joe Grandja
@@ -39,19 +42,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	// @formatter:off
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		var resolver = new DefaultBearerTokenResolver();
+		resolver.setAllowUriQueryParameter(true);
 		http
+			.oauth2ResourceServer().bearerTokenResolver(resolver).jwt().and()
+			.and()
 			.authorizeRequests(authorizeRequests ->
 				authorizeRequests
+						.antMatchers("/render/**").authenticated()
 					.anyRequest().permitAll())
 			.oauth2Login(oauth2Login ->
 				oauth2Login
-					.loginPage("/oauth2/authorization/docusign-client")
+					.loginPage("/oauth2/authorization/local-client")
 					.failureUrl("/login?error")
 					.permitAll())
 			.logout(logout ->
 				logout
 					.logoutSuccessUrl("http://localhost:8090/uaa/logout.do?client_id=login-client&redirect=http://localhost:8080"))
 			.oauth2Client();
+
 	}
 	// @formatter:on
 

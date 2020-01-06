@@ -17,6 +17,12 @@ public class IndexController {
         return "pages/index";
     }
 
+    @GetMapping("render")
+    public String RenderSecure()
+    {
+        // this method can only be called if authenticated, and allows token to be passed as querystring via `access_token` parameter - see SecurityConfig
+        return "pages/index";
+    }
 
     @RequestMapping(path = "/ds-return",method = RequestMethod.GET)
     public String returnController(@RequestParam(value="state", required = false) String state,
