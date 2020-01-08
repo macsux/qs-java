@@ -1,21 +1,50 @@
 package com.docusign.controller;
 
+import com.auth0.jwt.algorithms.Algorithm;
 import com.docusign.esign.api.EnvelopesApi;
 import com.docusign.esign.client.ApiClient;
 import com.docusign.esign.client.ApiException;
 import com.docusign.esign.model.*;
+import com.docusign.esign.model.Signer;
 import com.sun.jersey.core.util.Base64;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+//import org.bouncycastle.util.io.pem.PemReader;
+//import org.bouncycastle.util.io.pem.PemReader;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.io.*;
+import java.math.BigInteger;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.time.Instant;
+import java.time.temporal.IsoFields;
+import java.time.temporal.TemporalUnit;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,20 +58,52 @@ import java.util.Arrays;
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-
 @Controller
 public class QS01EmbedSigningCeremonyController {
 
+
     @RequestMapping(path = "/qs01", method = RequestMethod.GET)
 
-    public Object create(@RegisteredOAuth2AuthorizedClient("docusign-client") OAuth2AuthorizedClient docusignAuthClient, ModelMap model) throws ApiException, IOException {
+
+//    public Object create(@RegisteredOAuth2AuthorizedClient("docusign-client") OAuth2AuthorizedClient docusignAuthClient, ModelMap model) throws ApiException, IOException {
+    public Object create(ModelMap model) throws ApiException, IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+
+        Security.addProvider(new BouncyCastleProvider());
+
+        URL url = getClass().getResource("/private.txt");
+        InputStream in = url.openStream();
+        var pemParser = new PEMParser(new InputStreamReader(in));
+        var pemKeypair = PEMKeyPair.class.cast(pemParser.readObject());
+        var converter = new JcaPEMKeyConverter().setProvider("BC");
+        var keyPair = converter.getKeyPair(pemKeypair);
+
+        var jwt = Jwts.builder()
+                .setIssuer("469774cd-29e0-44b6-8897-7245d88386ea")
+                .setSubject("288d2ef2-8c7e-421a-ba63-34d316a05484")
+                .setIssuedAt(Date.from(Instant.now()))
+                .setExpiration(Date.from(Instant.now().plusSeconds(60 * 60)))
+                .setAudience("account-d.docusign.com")
+                .claim("scope", "signature impersonation")
+                .setHeaderParam("typ", Header.JWT_TYPE)
+                .setHeaderParam("alg", "RSA256")
+                .signWith(SignatureAlgorithm.RS256, keyPair.getPrivate())
+                .compact();
+
+        var rest = new RestTemplate();
+        var accessToken = rest.exchange("https://account-d.docusign.com/oauth/token?grant_type={grant_type}&assertion={assertion}",
+                HttpMethod.POST,
+                null,
+                AccessTokenResponse.class,
+                Map.of("grant_type","urn:ietf:params:oauth:grant-type:jwt-bearer",
+                        "assertion",jwt)).getBody().access_token;
+
         model.addAttribute("title","Embedded Signing Ceremony");
 
         // Data for this example
         // Fill in these constants
         //
         // Obtain an OAuth access token from https://developers.docusign.com/oauth-token-generator
-        String accessToken = docusignAuthClient.getAccessToken().getTokenValue();
+//        String accessToken = "";
 //        String accessToken = "";
         // Obtain your accountId from demo.docusign.com -- the account id is shown in the drop down on the
         // upper right corner of the screen by your picture or the default picture.
@@ -140,6 +201,19 @@ public class QS01EmbedSigningCeremonyController {
         redirect.setExposeModelAttributes(false);
         return redirect;
     }
+
+    private byte[] loadPEM(String resource) throws IOException {
+
+
+        URL url = getClass().getResource(resource);
+        InputStream in = url.openStream();
+
+        String pem = new String(in.readAllBytes(), StandardCharsets.ISO_8859_1);
+        Pattern parse = Pattern.compile("(?m)(?s)^---*BEGIN.*---*$(.*)^---*END.*---*$.*");
+        String encoded = parse.matcher(pem).replaceFirst("$1").trim();
+        return Base64.decode(encoded);
+    }
+
 
 
     // Read a file
